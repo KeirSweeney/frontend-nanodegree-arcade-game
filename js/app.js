@@ -11,27 +11,27 @@ var Enemy = function() {
     this.x = enemyStartXPos;
 
     this.resetPosition();
-    this.Speed();
+    this.setSpeed();
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
+    // which will ensure the game runs at the same setSpeed for
     // all computers.
 
     if (this.x < 500) {
         this.x += this.speed * dt;
-        // otherwise, reset its location and give it a new speed.
+        // otherwise, resetPosition its location and give it a new setSpeed.
     } else {
         this.x = -100;
         this.resetPosition();
-        this.Speed();
+        this.setSpeed();
     }
 
     // if the Enemy collide with the Player's position, update the score
-    // and prepare to reset the Player's position
+    // and prepare to resetPosition the Player's position
     if ((this.y == player.y) && (player.x > this.x) && (player.x < this.x + 20)) {
         collision = true;
         player.currentScore = player.currentScore - 10;
@@ -48,7 +48,7 @@ Enemy.prototype.resetPosition = function() {
     this.y = yLocations[Math.floor(Math.random() * yLocations.length)];
 };
 
-Enemy.prototype.Speed = function() {
+Enemy.prototype.setSpeed = function() {
     var maxSpeed = 500;
     var minSpeed = 200;
     this.speed = Math.random() * (maxSpeed - minSpeed) + minSpeed;
@@ -60,7 +60,7 @@ Enemy.prototype.Speed = function() {
 var Player = function() {
     this.sprite = 'images/char-boy.png';
 
-    this.reset();
+    this.resetPosition();
 
     // Create the initial score of 0 points
     this.currentScore = 0;
@@ -69,15 +69,14 @@ var Player = function() {
 
 Player.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
+    // which will ensure the game runs at the same setSpeed for
     // all computers.
 
     if (collision) {
         this.render();
-        this.reset();
+        this.resetPosition();
         collision = false;
     }
-
 };
 
 Player.prototype.render = function() {
@@ -105,7 +104,7 @@ Player.prototype.handleInput = function(key) {
         } else {
             this.currentScore += 20;
             this.render();
-            this.reset();
+            this.resetPosition();
         }
     }
     if (key == "down" && this.y < 375) {
@@ -113,8 +112,8 @@ Player.prototype.handleInput = function(key) {
     }
 };
 
-// Reset the Player's position to the start of the game
-Player.prototype.reset = function() {
+// resetPosition the Player's position to the start of the game
+Player.prototype.resetPosition = function() {
     this.x = 200;
     this.y = 385;
 };
