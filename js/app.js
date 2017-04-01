@@ -36,10 +36,11 @@ var Player = function() {
     this.score = "Score: " + String(this.currentScore);
 }
 
-Player.prototype.update = function(dt, x, y) {
+Player.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+
     // this.x = (this.x + x) * dt;
 
 };
@@ -104,10 +105,10 @@ var allEnemies = [enemy0, enemy1, enemy2];
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
+        65: 'left',
+        87: 'up',
+        68: 'right',
+        83: 'down'
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
