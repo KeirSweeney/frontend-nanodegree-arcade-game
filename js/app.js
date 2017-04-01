@@ -1,3 +1,5 @@
+var enemyStartXPos = -100;
+
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
@@ -6,6 +8,10 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
+    this.x = enemyStartXPos;
+
+    this.resetPosition();
+    this.Speed();
 };
 
 // Update the enemy's position, required method for game
@@ -14,11 +20,38 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+
+    if (this.x < 500) {
+        this.x += this.speed * dt;
+        // otherwise, reset its location and give it a new speed.
+    } else {
+        this.x = -100;
+        this.resetPosition();
+        this.Speed();
+    }
+
+    // if the Enemy collide with the Player's position, update the score
+    // and prepare to reset the Player's position
+    if ((this.y == player.y) && (player.x > this.x) && (player.x < this.x + 20)) {
+        collision = true;
+        player.currentScore = player.currentScore - 10;
+    }
 };
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+Enemy.prototype.resetPosition = function() {
+    var yLocations = [65, 145, 225];
+    this.y = yLocations[Math.floor(Math.random() * yLocations.length)];
+};
+
+Enemy.prototype.Speed = function() {
+    var maxSpeed = 500;
+    var minSpeed = 200;
+    this.speed = Math.random() * (maxSpeed - minSpeed) + minSpeed;
 };
 
 // Now write your own player class
@@ -28,20 +61,22 @@ var Player = function() {
     this.sprite = 'images/char-boy.png';
 
     this.reset();
-    console.log(this.x);
-    console.log(this.y);
 
     // Create the initial score of 0 points
     this.currentScore = 0;
     this.score = "Score: " + String(this.currentScore);
-}
+};
 
 Player.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
 
-    // this.x = (this.x + x) * dt;
+    if (collision) {
+        this.render();
+        this.reset();
+        collision = false;
+    }
 
 };
 
@@ -57,29 +92,24 @@ Player.prototype.render = function() {
     ctx.strokeStyle = "black";
     ctx.lineWidth = 2;
     ctx.strokeText(this.score, 430, 580);
-}
+};
 
 Player.prototype.handleInput = function(key) {
-    // Move left
     if (key == "left" && this.x > 0) {
-        // player.update(dt, -100, 0);
-        this.x = this.x - 100;
-    // More right
+        this.x -= 100;
     } else if (key == "right" && this.x < 400) {
-        this.x = this.x + 100;
-    // Move up
+        this.x += 100;
     } else if (key == "up") {
         if (this.y > 100) {
-            this.y = this.y - 80; 
-        // If the Player reached the top of the map, award points
+            this.y -= 80;
         } else {
-            this.currentScore = this.currentScore + 20;
+            this.currentScore += 20;
             this.render();
             this.reset();
         }
-    // Move down
-    } if (key == "down" && this.y < 375) {
-        this.y = this.y + 80;
+    }
+    if (key == "down" && this.y < 375) {
+        this.y += 80;
     }
 };
 
@@ -93,7 +123,6 @@ Player.prototype.reset = function() {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var player = new Player();
-
 var collision = false;
 
 var enemy0 = new Enemy();
