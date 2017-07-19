@@ -32,7 +32,7 @@ Enemy.prototype.update = function(dt) {
 
     // if the Enemy collide with the Player's position, update the score
     // and prepare to resetPosition the Player's position
-    if ((this.y == player.y) && (player.x > this.x) && (player.x < this.x + 20)) {
+    if ((this.y == player.y) && (player.x > this.x) && (player.x < this.x + 40)) {
         collision = true;
         player.currentScore = player.currentScore - 10;
     }
